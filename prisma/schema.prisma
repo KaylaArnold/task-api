@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProjectRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+model User {
+  id            String           @id @default(uuid())
+  email         String           @unique
+  passwordHash  String
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  projectsCreated Project[]      @relation("ProjectCreator")
+  memberships     ProjectMember[]
+  tasksCreated    Task[]         @relation("TaskCreator")
+  tasksAssigned   Task[]         @relation("TaskAssignee")
+}
+
+model Project {
+  id           String           @id @default(uuid())
+  name         String
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  createdById  String
+  createdBy    User             @relation("ProjectCreator", fields: [createdById], references: [id])
+
+  members      ProjectMember[]
+  tasks        Task[]
+}
+
+model ProjectMember {
+  projectId String
+  userId    String
+  role      ProjectRole @default(MEMBER)
+  createdAt DateTime    @default(now())
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, userId])
+  @@index([userId])
+}
+
+model Task {
+  id           String      @id @default(uuid())
+  title        String
+  description  String?
+  status       TaskStatus  @default(TODO)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  projectId    String
+  project      Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdById  String
+  createdBy    User        @relation("TaskCreator", fields: [createdById], references: [id])
+
+  assignedToId String?
+  assignedTo   User?       @relation("TaskAssignee", fields: [assignedToId], references: [id])
+
+  @@index([projectId, status])
+}
