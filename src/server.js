@@ -10,6 +10,16 @@ import tasksRoutes from "./routes/tasks.routes.js";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./docs/swagger.js";
 
+import dotenv from "dotenv";
+import app from "./app.js";
+
+dotenv.config();
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
+});
 const app = express();
 
 /*
