@@ -17,10 +17,18 @@ dotenv.config();
 
 const PORT = process.env.PORT || 5000;
 
+console.log("SERVER.JS: before listen", { PORT });
+
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });
-const app = express();
+
+// Tell us *why* it exits (if it exits)
+process.on("exit", (code) => console.log("SERVER.JS: process exit ❌", code));
+process.on("SIGTERM", () => console.log("SERVER>JS: SIGTERM ⚠️"));
+process.on("SIGINT", () => console.log("SERVER.JS: SIGINT ⚠️"));
+process.on("uncaughtException", (e) => console.error("uncaughException", e));
+process.on("unhandledRejection", (e) => console.error("unhandledRejection", e));
 
 /*
   ========================
