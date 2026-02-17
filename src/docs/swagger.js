@@ -1,9 +1,5 @@
 import swaggerJSDoc from "swagger-jsdoc";
 
-const serverUrl =
-  process.env.PUBLIC_API_URL ||
-  (process.env.FLY_APP_NAME ? `https://${process.env.FLY_APP_NAME}.fly.dev` : "http://localhost:5000");
-
 const options = {
   definition: {
     openapi: "3.0.0",
@@ -12,7 +8,7 @@ const options = {
       version: "1.0.0",
       description: "Multi-tenant Task Management API (JWT auth + RBAC)",
     },
-    servers: [{ url: serverUrl }],
+    servers: [{ url: process.env.PUBLIC_API_URL || "http://localhost:5000" }],
     components: {
       securitySchemes: {
         bearerAuth: { type: "http", scheme: "bearer", bearerFormat: "JWT" },
