@@ -8,7 +8,7 @@ RUN npm ci
 COPY . .
 
 # Generate Prisma client inside the image
-Run npx prisma generate
+RUN npx prisma generate
 
 ENV NODE_ENV=production
 

@@ -26,6 +26,13 @@ app.use("/", tasksRoutes);
 app.get("/docs.json", (req, res) => res.json(swaggerSpec));
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+app.get("/", (req, res) => {
+  res.json({ ok: true, message: "Task API running" });
+});
+
+app.get("/health", (req, res) => {
+  res.json({ ok: true });
+});
 
 /*
   ========================
