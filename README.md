@@ -136,6 +136,24 @@ Input validation prior to database interaction
 
 User-scoped database queries prevent horizontal privilege escalation
 
+🧠 Engineering Decisions
+
+Stateless Authentication
+
+JWT was chosen over session-based auth to ensure horizontal scalability and eliminate server-side session storage.
+
+Tenant Isolation Strategy
+
+All database queries are scoped by userId to prevent horizontal privilege escalation. No task can be accessed unless it belongs to the authenticated user.
+
+Validation Layer
+
+Zod is used at the middleware level to validate request bodies before controller execution, preventing invalid data from reaching the service layer.
+
+Modular Architecture
+
+Routes, controllers, middleware, and services are separated to enforce single-responsibility principles and improve long-term maintainability.
+
 📈 Engineering Focus
 
 This project demonstrates:
@@ -151,6 +169,20 @@ Clean Express architecture
 ORM-based relational modeling with Prisma
 
 Cloud-native deployment practices
+
+🚀 Future Improvements
+
+Refresh token rotation strategy
+
+Rate limiting for authentication endpoints
+
+Integration testing with Supertest
+
+CI/CD pipeline for automated deployment
+
+Pagination & filtering for task queries
+
+Structured logging (Winston / Pino)
 
 👩🏽‍💻 Author
 
